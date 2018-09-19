@@ -1,18 +1,67 @@
+pub mod schema;
+pub mod models;
 use std::io;
 extern crate serde;
 #[macro_use] extern crate rouille;
 #[macro_use] extern crate serde_derive;
 use rouille::Response;
 
+#[macro_use]
+extern crate diesel;
+extern crate dotenv;
+
+use diesel::prelude::*;
+use diesel::pg::PgConnection;
+use dotenv::dotenv;
+use std::env;
+
+use self::models::{Project};
+
+pub fn establish_connection() -> PgConnection {
+    dotenv().ok();
+
+    let database_url = env::var("DATABASE_URL").expect("DATABASE_URL must be set");
+    PgConnection::establish(&database_url).expect(&format!("Error connecting to {}", database_url))
+}
+
+pub fn fetch_all_projects() {
+    use self::schema::projects::dsl::*;
+    let connection = establish_connection();
+    let results = projects.limit(5)
+       .load::<Project>(&connection)
+       .expect("Error loading projects");
+
+    println!("Displaying {} posts", results.len());
+     for project in results {
+         println!("{}", project.title);
+         println!("-----------\n");
+         println!("{}", project.body);
+    }
+}
+
+
+// pub fn create_project(conn: &PgConnection, title: &str, body: &str) -> Post {
+//     use schema::projects;
+// 
+//     let new_project = NewProject {
+//         title: title,
+//         body: body,
+//     };
+// 
+//     diesel::insert_into(projects::table)
+//         .values(&new_project)
+//         .get_result(conn)
+//         .expect("Error saving new project")
+// }
+
 fn main() {
+
+    fetch_all_projects();
     #[derive(Serialize)]
     struct MyStruct {
         message: String,
     }
-    // This example demonstrates how to handle HTML forms.
 
-    // Note that like all examples we only listen on `localhost`, so you can't access this server
-    // from another machine than your own.
     println!("Now listening on localhost:8000");
 
     rouille::start_server("localhost:8000", move |request| {
