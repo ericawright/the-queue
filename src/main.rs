@@ -2,9 +2,10 @@ pub mod schema;
 pub mod models;
 use std::io;
 extern crate serde;
-#[macro_use] extern crate rouille;
 #[macro_use] extern crate serde_derive;
-use rouille::Response;
+extern crate serde_json;
+#[macro_use] extern crate rouille;
+use rouille::{Response};
 
 #[macro_use]
 extern crate diesel;
@@ -14,8 +15,8 @@ use diesel::prelude::*;
 use diesel::pg::PgConnection;
 use dotenv::dotenv;
 use std::env;
-
-use self::models::{Project};
+use self::schema::projects;
+use self::models::{Project, NewProject};
 
 pub fn establish_connection() -> PgConnection {
     dotenv().ok();
@@ -24,29 +25,25 @@ pub fn establish_connection() -> PgConnection {
     PgConnection::establish(&database_url).expect(&format!("Error connecting to {}", database_url))
 }
 
-pub fn fetch_all_projects() -> std::vec::Vec<models::Project> {
-    use self::schema::projects::dsl::*;
-    let connection = establish_connection();
-    let results = projects.limit(5)
-       .load::<Project>(&connection)
+pub fn fetch_all_projects(conn: &PgConnection) -> std::vec::Vec<models::Project> {
+    let results = projects::table.limit(5)
+       .load::<Project>(conn)
        .expect("Error loading projects");
    results
 }
 
+pub fn create_project(conn: &PgConnection, title: &str, body: &str) -> usize {
 
-// pub fn create_project(conn: &PgConnection, title: &str, body: &str) -> Post {
-//     use schema::projects;
-// 
-//     let new_project = NewProject {
-//         title: title,
-//         body: body,
-//     };
-// 
-//     diesel::insert_into(projects::table)
-//         .values(&new_project)
-//         .get_result(conn)
-//         .expect("Error saving new project")
-// }
+    let new_project = NewProject {
+        title,
+        body,
+    };
+
+    diesel::insert_into(projects::table)
+        .values(new_project)
+        .execute(conn)
+        .expect("Error saving new project")
+}
 
 fn main() {
     #[derive(Serialize)]
@@ -57,14 +54,23 @@ fn main() {
     println!("Now listening on localhost:8000");
 
     rouille::start_server("localhost:8000", move |request| {
+        let connection = establish_connection();
+        // if we have a file in the client/build/ folder by the same name as the url, return that file.
+        let response = rouille::match_assets(&request, "./client/build/");
+        if response.is_success() {
+            return response;
+        }
+
         rouille::log(&request, io::stdout(), || {
             router!(request,
+
                 (GET) (/) => {
-                    Response::json(&MyStruct { message: "Hello! Welcome to the root route".to_owned()})
+                    return rouille::match_assets(&request, "./client/build/index.html");
                 },
-                (GET) (/api/projects) => {
-                    let results = fetch_all_projects();
-                    println!("Displaying {} posts", results.len());
+
+                (GET) (/projects) => {
+                    let results = fetch_all_projects(&connection);
+                    println!("Displaying {} projects", results.len());
                     for project in results {
                         println!("{}", project.title);
                         println!("-----------\n");
@@ -74,22 +80,17 @@ fn main() {
                     Response::json(&MyStruct { message: "Hello! Unfortunately there is nothing to see here.".to_owned()})
                 },
 
-                (POST) (/submit) => {
+                (POST) (/projects) => {
+                    #[derive(Deserialize, Debug)]
+                    struct Json {
+                        title: String,
+                        body: String,
+                    }
+                    let data: Json = try_or_400!(rouille::input::json_input(request));
+                    
+                    create_project(&connection, &data.title, &data.body);
 
-                    // We query the data with the `post_input!` macro. Each field of the macro
-                    // corresponds to an element of the form.
-                    // If the macro returns an error (for example if a field is missing, which
-                    // can happen if you screw up the form or if the user made a manual request)
-                    // we return a 400 response. 
-                    let data = try_or_400!(post_input!(request, {
-                        txt: String,
-                        files: Vec<rouille::input::post::BufferedFile>,
-                    }));
-
-                    // We just print what was received on stdout. Of course in a real application
-                    // you probably want to process the data, eg. store it in a database. 
-                    println!("Received data: {:?}", data);
-
+                    // return anyhting for now
                     Response::json(&MyStruct { message: "This is the post route, something went to the DB".to_owned()})
                 },
 
