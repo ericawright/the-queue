@@ -13,7 +13,8 @@ class App extends Component {
   }
 
   callApi = async () => {
-    const response = await fetch('/api/hello');
+    // getting all posts from DB
+    const response = await fetch('/api/projects');
     const body = await response.json();
 
     if (response.status !== 200) throw Error(body.message);

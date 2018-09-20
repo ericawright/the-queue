@@ -24,19 +24,13 @@ pub fn establish_connection() -> PgConnection {
     PgConnection::establish(&database_url).expect(&format!("Error connecting to {}", database_url))
 }
 
-pub fn fetch_all_projects() {
+pub fn fetch_all_projects() -> std::vec::Vec<models::Project> {
     use self::schema::projects::dsl::*;
     let connection = establish_connection();
     let results = projects.limit(5)
        .load::<Project>(&connection)
        .expect("Error loading projects");
-
-    println!("Displaying {} posts", results.len());
-     for project in results {
-         println!("{}", project.title);
-         println!("-----------\n");
-         println!("{}", project.body);
-    }
+   results
 }
 
 
@@ -55,8 +49,6 @@ pub fn fetch_all_projects() {
 // }
 
 fn main() {
-
-    fetch_all_projects();
     #[derive(Serialize)]
     struct MyStruct {
         message: String,
@@ -68,17 +60,21 @@ fn main() {
         rouille::log(&request, io::stdout(), || {
             router!(request,
                 (GET) (/) => {
-                    // When viewing the home page, we return an HTML document described below.
                     Response::json(&MyStruct { message: "Hello! Welcome to the root route".to_owned()})
                 },
-                (GET) (/api/hello) => {
+                (GET) (/api/projects) => {
+                    let results = fetch_all_projects();
+                    println!("Displaying {} posts", results.len());
+                    for project in results {
+                        println!("{}", project.title);
+                        println!("-----------\n");
+                        println!("{}", project.body);
+                    }
                     // rouille::Response::json({message: "Hello! Unfortunately there is nothing to see here."})
                     Response::json(&MyStruct { message: "Hello! Unfortunately there is nothing to see here.".to_owned()})
                 },
 
                 (POST) (/submit) => {
-                    // This is the route that is called when the user submits the form of the
-                    // home page.
 
                     // We query the data with the `post_input!` macro. Each field of the macro
                     // corresponds to an element of the form.
