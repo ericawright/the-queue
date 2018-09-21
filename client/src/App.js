@@ -12,12 +12,10 @@ class App extends Component {
   }
 
   componentDidMount() {
-    this.callApi()
-      .then(res => this.setState({ response: res }))
-      .catch(err => console.log(err));
+
   }
 
-  callApi = async () => {
+  listProjects = async () => {
     // getting all posts from DB
     const response = await fetch('/projects');
     const body = await response.json();
@@ -27,7 +25,7 @@ class App extends Component {
   }
 
   showProjects() {
-    this.callApi()
+    this.listProjects()
       .then(res => this.setState({ response: res }))
       .catch(err => console.log(err));
   }

@@ -26,19 +26,13 @@ pub fn establish_connection() -> PgConnection {
 }
 
 pub fn fetch_all_projects(conn: &PgConnection) -> std::vec::Vec<models::Project> {
-    let results = projects::table.limit(5)
+    let results = projects::table
        .load::<Project>(conn)
        .expect("Error loading projects");
    results
 }
 
-pub fn create_project(conn: &PgConnection, title: &str, body: &str) -> usize {
-
-    let new_project = NewProject {
-        title,
-        body,
-    };
-
+pub fn create_project(conn: &PgConnection, new_project: &NewProject) -> usize {
     diesel::insert_into(projects::table)
         .values(new_project)
         .execute(conn)
@@ -72,25 +66,20 @@ fn main() {
                     let results = fetch_all_projects(&connection);
                     println!("Displaying {} projects", results.len());
                     for project in results {
-                        println!("{}", project.title);
                         println!("-----------\n");
+                        println!("{}", project.title);
                         println!("{}", project.body);
                     }
-                    // rouille::Response::json({message: "Hello! Unfortunately there is nothing to see here."})
+
                     Response::json(&MyStruct { message: "Hello! Unfortunately there is nothing to see here.".to_owned()})
                 },
 
                 (POST) (/projects) => {
-                    #[derive(Deserialize, Debug)]
-                    struct Json {
-                        title: String,
-                        body: String,
-                    }
-                    let data: Json = try_or_400!(rouille::input::json_input(request));
+                    let data: NewProject = try_or_400!(rouille::input::json_input(request));
                     
-                    create_project(&connection, &data.title, &data.body);
+                    create_project(&connection, &data);
 
-                    // return anyhting for now
+                    // return anything for now
                     Response::json(&MyStruct { message: "This is the post route, something went to the DB".to_owned()})
                 },
 

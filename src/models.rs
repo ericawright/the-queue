@@ -7,9 +7,9 @@ pub struct Project {
 }
 
 
-#[derive(Insertable)]
+#[derive(Insertable, Deserialize)]
 #[table_name = "projects"]
-pub struct NewProject<'a> {
-    pub title: &'a str,
-    pub body: &'a str,
+pub struct NewProject {
+    pub title: String,
+    pub body: String,
 }
