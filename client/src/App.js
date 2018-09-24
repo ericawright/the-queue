@@ -1,33 +1,25 @@
 import React, { Component } from 'react';
 import './App.css';
+import Project from './Project';
 
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      response: ''
+      projects: [],
     };
     this.submitNewProject = this.submitNewProject.bind(this);
     this.showProjects = this.showProjects.bind(this);
   }
 
-  componentDidMount() {
-
+  componentWillMount() {
+    this.showProjects();
   }
 
-  listProjects = async () => {
-    // getting all posts from DB
+  showProjects = async () => {
     const response = await fetch('/projects');
-    const body = await response.json();
-
-    if (response.status !== 200) throw Error(body.message);
-    return body.message;
-  }
-
-  showProjects() {
-    this.listProjects()
-      .then(res => this.setState({ response: res }))
-      .catch(err => console.log(err));
+    let projects = await response.json();
+    this.setState({projects});
   }
   
   submitNewProject =  async e => {
@@ -49,14 +41,13 @@ class App extends Component {
       });
 
     const body = await response.json();
+    this.showProjects();
     console.log("response,", body);
   }
 
   render() {
     return (
       <div className="App">
-        <p className="App-intro">{this.state.response}</p>
-        <button onClick={this.showProjects}> view projects </button>
         <form onSubmit={this.submitNewProject}> 
           <h2> Submit a new project</h2>
           <label for="title">Title of Project</label>
@@ -65,6 +56,15 @@ class App extends Component {
           <textarea name="body" id="body"></textarea>
           <input type="submit"/>
         </form>
+        <div>
+          <h2>Project List</h2>
+          <button onClick={this.showProjects}>Update Projects List</button>
+          {this.state.projects.map(element => {
+            return (
+              <Project title={element.title} body={element.body}/>
+            )
+          })}
+        </div>
       </div>
     );
   }

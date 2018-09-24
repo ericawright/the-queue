@@ -40,10 +40,14 @@ pub fn create_project(conn: &PgConnection, new_project: &NewProject) -> usize {
 }
 
 fn main() {
-    #[derive(Serialize)]
-    struct MyStruct {
+    #[derive(Serialize,)]
+    pub struct MyStruct {
         message: String,
     }
+    // #[derive(Serialize, Clone, Debug)]
+    // enum Project {
+    //     title(String),
+    // }
 
     println!("Now listening on localhost:8000");
 
@@ -65,13 +69,16 @@ fn main() {
                 (GET) (/projects) => {
                     let results = fetch_all_projects(&connection);
                     println!("Displaying {} projects", results.len());
-                    for project in results {
-                        println!("-----------\n");
-                        println!("{}", project.title);
-                        println!("{}", project.body);
-                    }
-
-                    Response::json(&MyStruct { message: "Hello! Unfortunately there is nothing to see here.".to_owned()})
+                    // for project in results {
+                    //     println!("-----------\n");
+                    //     println!("{}", project.title);
+                    //     println!("{}", project.body);
+                    // }
+                    // let v3: Vec<_> = (0..7).map(|_| Sim::default()).collect();
+                      // let foos = results.collect::<Vec<models::Project>>();
+                    println!("{:?}", results);
+                    
+                    Response::json(&results)
                 },
 
                 (POST) (/projects) => {

@@ -8,11 +8,9 @@ In the base of the project run:
 ```
 This will compile and start the rust server.
 
+Then build the frontend:
 ```sh
-  cd frontend
+  cd client
   npm install
-  npm start
+  npm run build
 ```
-
-`yarn start` will also work.
-
