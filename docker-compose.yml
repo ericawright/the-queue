@@ -2,10 +2,27 @@ version: '3'
 services:
   db:
     image: postgres
-    ports: 
-      - "15432:5432"
     volumes:
       - $PWD/tmp/db:/var/lib/postgresql/data
     environment:
       POSTGRES_PASSWORD: secretpass
       PGDATA: /tmp
+
+  web:
+    build: ./client
+    volumes:
+      - $PWD/client:/usr/src/web
+    command: bash -c "yarn && yarn watch"
+
+  api_server:
+    build: .
+    environment:
+      DATABASE_URL: postgres://postgres:secretpass@db:5432/queue
+      CARGO_TARGET_DIR: /cargo
+    ports:
+      - "8000:8000"
+    volumes:
+      - $PWD:/usr/src/api
+    links:
+      - db
+    command: bash -c "sleep 5 && diesel setup && cargo watch -x run"
