@@ -5,7 +5,7 @@ extern crate serde;
 #[macro_use] extern crate serde_derive;
 extern crate serde_json;
 #[macro_use] extern crate rouille;
-use rouille::{Response};
+use rouille::{Request, Response};
 
 #[macro_use]
 extern crate diesel;
@@ -54,7 +54,7 @@ fn main() {
     rouille::start_server("localhost:8000", move |request| {
         let connection = establish_connection();
         // if we have a file in the client/build/ folder by the same name as the url, return that file.
-        let response = rouille::match_assets(&request, "./client/build/");
+        let response = rouille::match_assets(&request, "./client/build");
         if response.is_success() {
             return response;
         }
@@ -63,7 +63,8 @@ fn main() {
             router!(request,
 
                 (GET) (/) => {
-                    return rouille::match_assets(&request, "./client/build/index.html");
+                    let index = Request::fake_http("GET", "/index.html", Vec::new(), Vec::new());
+                    return rouille::match_assets(&index, "./client/build");
                 },
 
                 (GET) (/projects) => {
