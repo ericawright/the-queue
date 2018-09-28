@@ -49,9 +49,9 @@ fn main() {
     //     title(String),
     // }
 
-    println!("Now listening on localhost:8000");
+    println!("Now listening on 0.0.0.0:8000");
 
-    rouille::start_server("localhost:8000", move |request| {
+    rouille::start_server("0.0.0.0:8000", move |request| {
         let connection = establish_connection();
         // if we have a file in the client/build/ folder by the same name as the url, return that file.
         let response = rouille::match_assets(&request, "./client/build");
