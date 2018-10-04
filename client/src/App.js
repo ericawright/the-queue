@@ -26,8 +26,10 @@ class App extends Component {
     e.preventDefault();
     
     let data = {
-      title: e.target.querySelector("#title").value, 
+      title: e.target.querySelector("#title").value,
       body: e.target.querySelector("#body").value,
+      requester: e.target.querySelector("#requester").value, 
+      url: e.target.querySelector("#url").value,
     };
     console.log("data", data);
     
@@ -50,10 +52,14 @@ class App extends Component {
       <div className="App">
         <form onSubmit={this.submitNewProject}> 
           <h2> Submit a new project</h2>
+          <label for="requester">Requester Name</label>
+          <input name="requester" id="requester"></input>
           <label for="title">Title of Project</label>
           <input name="title" id="title"></input>
           <label for="body">tell us about the project</label>
           <textarea name="body" id="body"></textarea>
+          <label for="url">add a link to more information</label>
+          <input name="url" id="url"></input>
           <input type="submit"/>
         </form>
         <div>
