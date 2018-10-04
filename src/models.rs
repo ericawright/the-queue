@@ -1,4 +1,5 @@
 use super::schema::projects;
+
 #[derive(Queryable, Debug, Serialize)]
 pub struct Project {
     pub id: i32,

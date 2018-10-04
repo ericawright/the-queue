@@ -1,3 +1,5 @@
+#![allow(proc_macro_derive_resolution_fallback)]
+
 pub mod schema;
 pub mod models;
 use std::io;
@@ -26,10 +28,9 @@ pub fn establish_connection() -> PgConnection {
 }
 
 pub fn fetch_all_projects(conn: &PgConnection) -> std::vec::Vec<models::Project> {
-    let results = projects::table
+    projects::table
        .load::<Project>(conn)
-       .expect("Error loading projects");
-   results
+       .expect("Error loading projects")
 }
 
 pub fn create_project(conn: &PgConnection, new_project: &NewProject) -> usize {
@@ -64,7 +65,7 @@ fn main() {
 
                 (GET) (/) => {
                     let index = Request::fake_http("GET", "/index.html", Vec::new(), Vec::new());
-                    return rouille::match_assets(&index, "./client/build");
+                    rouille::match_assets(&index, "./client/build")
                 },
 
                 (GET) (/projects) => {
