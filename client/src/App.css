@@ -1,7 +1,75 @@
+@import url('../node_modules/photon-colors/photon-colors.css');
+
 .App-title {
   font-size: 1.5em;
 }
 
 .App-intro {
   font-size: large;
+}
+
+.grid-wrapper {
+  display: grid;
+  column-gap: 120px;
+  row-gap: 40px;
+  grid-template-columns: auto auto auto;
+  grid-template-rows: auto auto auto;
+  margin: 40px;
+}
+
+#suggest-button {
+  grid-column-start: 1;
+  grid-column-end: 1;
+  grid-row-start: 2;
+  grid-row-end: 2;
+}
+
+#submitted {
+  grid-column-start: 1;
+  grid-column-end: 1;
+  grid-row-start: 1;
+  grid-row-end: 1;
+}
+
+#in-progress {
+  grid-column-start: 2;
+  grid-column-end: 2;
+  grid-row-start: 1;
+  grid-row-end: 1;
+}
+
+#done {
+  grid-column-start: 3;
+  grid-column-end: 3;
+  grid-row-start: 1;
+  grid-row-end: 1;
+}
+
+.project-collection {
+  grid-column-start: 1;
+  grid-column-end: 1;
+  grid-row-start: 3;
+  grid-row-end: 3;
+}
+
+#overlay {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  background-color: var(--grey-90-a20);
+}
+
+#new-project-form {
+  position: absolute;
+  margin: auto;
+  width: 50%;
+  height: 50%;
+  left: 25%;
+  top: 25%;
+  background-color: var(--grey-10);
+  border: 1px var(--grey-80) solid;
+  border-radius: 2px;
+  padding: 20px;
 }
