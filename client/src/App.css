@@ -52,24 +52,55 @@
   grid-row-end: 3;
 }
 
+#new-project-form,
 #overlay {
-  position: fixed;
   top: 0;
   bottom: 0;
   right: 0;
   left: 0;
-  background-color: var(--grey-90-a20);
+}
+
+#overlay {
+  position: fixed;
+  background-color: var(--grey-90-a60);
 }
 
 #new-project-form {
   position: absolute;
   margin: auto;
-  width: 50%;
-  height: 50%;
-  left: 25%;
-  top: 25%;
+  width: 650px;
+  height: 380px;
   background-color: var(--grey-10);
-  border: 1px var(--grey-80) solid;
-  border-radius: 2px;
+  border: 1px var(--grey-60) solid;
+  border-radius: 3px;
   padding: 20px;
+}
+
+#form-content {
+  width: 100%;
+  height: 100px;
+  resize: none;
+}
+
+#new-project-form label {
+  display: flex;
+  margin: 10px 0;
+}
+
+#new-project-form label span {
+  flex: 1;
+}
+
+#new-project-form label input {
+  flex: 2;
+  margin-inline-start: 4px;
+}
+
+.submit-button {
+  float: right;
+}
+
+.form-note {
+  display: inline-block;
+  font-size: 12px;
 }

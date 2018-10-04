@@ -7,7 +7,7 @@ class Project extends Component {
     return (
       <div className='project-card'>
         <p>title: {this.props.title}</p>
-        <p>body: {this.props.body}</p>
+        <p>content: {this.props.content}</p>
       </div>
     );
   }
