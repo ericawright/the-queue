@@ -1,3 +1,5 @@
+/* eslint-disable */
+// TODO re-enable eslint once we add tests
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
