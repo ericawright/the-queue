@@ -1,30 +1,28 @@
-import React, { Component } from 'react';
 import './App.css';
-import Project from './Project';
+import React, {Component} from 'react';
 import Header from './Header';
+import Project from './Project';
 
 class App extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      projects: [],
-    };
+    this.state = {projects: []};
     this.submitNewProject = this.submitNewProject.bind(this);
     this.showProjects = this.showProjects.bind(this);
     this.toggleForm = this.toggleForm.bind(this);
   }
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     this.showProjects();
   }
 
-  showProjects = async () => {
+  async showProjects() {
     const response = await fetch('/projects');
     let projects = await response.json();
     this.setState({projects});
   }
-  
-  submitNewProject =  async e => {
+
+  async submitNewProject(e) {
     e.preventDefault();
     this.toggleForm();
 
@@ -50,18 +48,18 @@ class App extends Component {
     }
 
     const response = await fetch('/projects', {
-        method: 'POST',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data),
-      });
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    });
 
     const result = await response.json();
     // TODO handle error here
     this.showProjects();
-    console.log("response,", result);
+    console.log('response,', result);
   }
 
   toggleForm() {
@@ -71,25 +69,21 @@ class App extends Component {
       suggestionForm.removeAttribute('hidden');
       overlay.removeAttribute('hidden');
     } else {
-      suggestionForm.setAttribute("hidden", true);
-      overlay.setAttribute("hidden", true);
+      suggestionForm.setAttribute('hidden', true);
+      overlay.setAttribute('hidden', true);
     }
   }
 
   render() {
     return (
       <div className="App">
-        <Header/>
+        <Header />
         <div className="grid-wrapper">
           {/* Column 1 */}
           <h2 className="column-title" id="submitted">Submitted</h2>
-          <button onClick="" id="suggest-button" onClick={this.toggleForm}>Suggest a new project</button>
+          <button id="suggest-button" onClick={this.toggleForm}>Suggest a new project</button>
           <div className="project-collection">
-            {this.state.projects.map(element => {
-              return (
-                <Project title={element.title} content={element.content}/>
-              )
-            })}
+            {this.state.projects.map((element, i) => <Project key={element+i} title={element.title} content={element.content} />)}
           </div>
 
           {/* Column 2 */}
@@ -99,16 +93,16 @@ class App extends Component {
           <h2 className="column-title" id="done">Done</h2>
 
         </div>
-        <div hidden="true" id="overlay" onClick={this.toggleForm}></div>
+        <div hidden="true" id="overlay" onClick={this.toggleForm} />
         <div hidden="true" id="new-project-form">
-          <form onSubmit={this.submitNewProject}> 
+          <form onSubmit={this.submitNewProject}>
             <h2>Submit a New Project</h2>
-            <label for="form-name"><span>Requester name: </span><input name="form-name" id="form-name"></input></label>
-            <label for="form-email"><span>Email: * </span><input type="email" name="form-email" id="form-email" placeholder="firefox@mozilla.com"></input></label>
-            <label for="form-title"><span>Title of project: * </span><input name="form-title" id="form-title"></input></label>
-            <label for="form-content">Tell us about the project:</label>
-            <textarea name="form-content" id="form-content"></textarea>
-            <label for="form-link"><span>Link to more information: * </span><input type="url" name="form-link" id="form-link"></input></label>
+            <label htmlFor="form-name"><span>Requester name: </span><input name="form-name" id="form-name" /></label>
+            <label htmlFor="form-email"><span>Email: * </span><input type="email" name="form-email" id="form-email" placeholder="firefox@mozilla.com" /></label>
+            <label htmlFor="form-title"><span>Title of project: * </span><input name="form-title" id="form-title" /></label>
+            <label htmlFor="form-content">Tell us about the project:</label>
+            <textarea name="form-content" id="form-content" />
+            <label htmlFor="form-link"><span>Link to more information: * </span><input type="url" name="form-link" id="form-link" /></label>
             <p className="form-note">Note: fields with a * are required.</p>
             <button className="submit-button">Submit Request</button>
           </form>

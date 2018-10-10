@@ -22,13 +22,12 @@ a.button {
   width: auto;
 }
 
-
 /* Primary style */
 
 button.button--primary,
 a.button.button--primary {
   background-color: var(--blue-60);
-  color: #fff;
+  color: #FFFFFF;
   font-weight: 300;
 }
 
@@ -41,7 +40,6 @@ button.button--primary:active,
 a.button.button--primary:active {
   background-color: var(--blue-80);
 }
-
 
 /* Ghost style */
 
@@ -58,7 +56,6 @@ a.button.button--ghost {
   width: 32px;
 }
 
-
 /* Micro size */
 
 button.button--micro,
@@ -69,7 +66,6 @@ a.button.button--micro {
   padding: 0 8px;
   min-width: auto;
 }
-
 
 /* Puffy size */
 
@@ -82,8 +78,14 @@ a.button.button--puffy {
   padding: 0 16px;
 }
 
-
 /* Hover, Active states */
+button::-moz-focusring {
+  outline: none;
+}
+
+button::-moz-focus-inner {
+  border: 0;
+}
 
 button:hover,
 a.button:hover {
@@ -105,13 +107,6 @@ a.button.button--ghost:active {
   background-color: var(--grey-90-a20);
 }
 
-button::-moz-focusring {
-  outline: none;
-}
-button::-moz-focus-inner {
-  border: 0;
-}
-
 button:focus,
 a.button:focus {
   box-shadow:
@@ -123,6 +118,6 @@ a.button:focus {
 button[disabled],
 a.button[aria-disabled],
 a.button.button--disabled {
-  opacity: .4;
+  opacity: 0.4;
   pointer-events: none;
 }
