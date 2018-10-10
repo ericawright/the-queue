@@ -12,7 +12,6 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "prebuild": "npm run lint",
     "build": "react-scripts build",
     "watch": "watch 'npm run build' src public",
     "test": "react-scripts test --env=jsdom",
