@@ -81,6 +81,7 @@ fn main() {
                 },
 
                 (POST) (/projects) => {
+                    println!("called projects first");
                     let data: NewProject = try_or_400!(rouille::input::json_input(request));
                     
                     create_project(&connection, &data);

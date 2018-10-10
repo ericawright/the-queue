@@ -27,17 +27,30 @@ class App extends Component {
   submitNewProject =  async e => {
     e.preventDefault();
     this.toggleForm();
-    
+
+    let title = e.target.querySelector('#form-title').value;
+    let email = e.target.querySelector('#form-email').value;
+    let link = e.target.querySelector('#form-link').value;
+    if (!title || !link || !email) {
+      // TODO: show error here
+      return;
+    }
     let data = {
-      title: e.target.querySelector("#form-title").value,
-      body: e.target.querySelector("#form-content").value,
-      requester: e.target.querySelector("#form-requester").value,
-      url: e.target.querySelector("#form-url").value,
+      title,
+      link,
+      email,
     };
-    console.log("data", data);
-    
-    const response = await fetch("/projects", {
-        method: "POST",
+    let content = e.target.querySelector('#form-content').value;
+    let name = e.target.querySelector('#form-name').value;
+    if (content) {
+      data.content = content;
+    }
+    if (name) {
+      data.name = name;
+    }
+
+    const response = await fetch('/projects', {
+        method: 'POST',
         headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/json'
@@ -45,11 +58,12 @@ class App extends Component {
         body: JSON.stringify(data),
       });
 
-    const body = await response.json();
+    const result = await response.json();
+    // TODO handle error here
     this.showProjects();
-    console.log("response,", body);
+    console.log("response,", result);
   }
-  
+
   toggleForm() {
     let suggestionForm = document.getElementById('new-project-form');
     let overlay = document.getElementById('overlay');
@@ -73,7 +87,7 @@ class App extends Component {
           <div className="project-collection">
             {this.state.projects.map(element => {
               return (
-                <Project title={element.title} body={element.body}/>
+                <Project title={element.title} content={element.content}/>
               )
             })}
           </div>
@@ -88,16 +102,15 @@ class App extends Component {
         <div hidden="true" id="overlay" onClick={this.toggleForm}></div>
         <div hidden="true" id="new-project-form">
           <form onSubmit={this.submitNewProject}> 
-            <h2> Submit a new project</h2>
-            <label for="form-requester">Requester Name</label>
-            <input name="form-requester" id="form-requester"></input>
-            <label for="form-title">Title of Project</label>
-            <input name="form-title" id="form-title"></input>
-            <label for="form-content">tell us about the project</label>
+            <h2>Submit a New Project</h2>
+            <label for="form-name"><span>Requester name: </span><input name="form-name" id="form-name"></input></label>
+            <label for="form-email"><span>Email: * </span><input type="email" name="form-email" id="form-email" placeholder="firefox@mozilla.com"></input></label>
+            <label for="form-title"><span>Title of project: * </span><input name="form-title" id="form-title"></input></label>
+            <label for="form-content">Tell us about the project:</label>
             <textarea name="form-content" id="form-content"></textarea>
-            <label for="form-url">add a link to more information</label>
-            <input name="form-url" id="form-url"></input>
-            <input type="submit"/>
+            <label for="form-link"><span>Link to more information: * </span><input type="url" name="form-link" id="form-link"></input></label>
+            <p className="form-note">Note: fields with a * are required.</p>
+            <button className="submit-button">Submit Request</button>
           </form>
         </div>
       </div>
