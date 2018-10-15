@@ -1,4 +1,4 @@
-// import './Modal.css';
+import '../styles/NewProjectForm.css';
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 
