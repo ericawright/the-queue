@@ -6,7 +6,11 @@ import Project from './Project';
 class App extends Component {
   constructor(props) {
     super(props);
-    this.state = {projects: []};
+    this.state = {
+      new_projects: [],
+      in_progress_projects: [],
+      done_projects: [],
+    };
     this.submitNewProject = this.submitNewProject.bind(this);
     this.showProjects = this.showProjects.bind(this);
     this.toggleForm = this.toggleForm.bind(this);
@@ -19,7 +23,11 @@ class App extends Component {
   async showProjects() {
     const response = await fetch('/projects');
     let projects = await response.json();
-    this.setState({projects});
+    let new_projects = projects.filter(project => project.status === 'new');
+    let in_progress_projects = projects.filter(project => project.status === 'in-progress');
+    let done_projects = projects.filter(project => project.status === 'done');
+
+    this.setState({new_projects, in_progress_projects, done_projects});
   }
 
   async submitNewProject(e) {
@@ -82,15 +90,21 @@ class App extends Component {
           {/* Column 1 */}
           <h2 className="column-title" id="submitted">Submitted</h2>
           <button id="suggest-button" onClick={this.toggleForm}>Suggest a new project</button>
-          <div className="project-collection">
-            {this.state.projects.map((element, i) => <Project key={element+i} title={element.title} content={element.content} />)}
+          <div id="project-collection-col-one">
+            {this.state.new_projects.map((element, i) => <Project key={element+i} title={element.title} content={element.content} />)}
           </div>
 
           {/* Column 2 */}
           <h2 className="column-title" id="in-progress">In Progress</h2>
+          <div id="project-collection-col-two">
+            {this.state.in_progress_projects.map((element, i) => <Project key={element+i} title={element.title} content={element.content} />)}
+          </div>
 
           {/* Column 3 */}
           <h2 className="column-title" id="done">Done</h2>
+          <div id="project-collection-col-three">
+            {this.state.done_projects.map((element, i) => <Project key={element+i} title={element.title} content={element.content} />)}
+          </div>
 
         </div>
         <div hidden="true" id="overlay" onClick={this.toggleForm} />
