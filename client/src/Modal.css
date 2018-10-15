@@ -1,0 +1,23 @@
+#modal-base,
+#overlay {
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+}
+
+#overlay {
+  position: fixed;
+  background-color: var(--grey-90-a60);
+}
+
+#modal-base {
+  position: absolute;
+  margin: auto;
+  width: 650px;
+  height: 380px;
+  background-color: var(--grey-10);
+  border: 1px var(--grey-60) solid;
+  border-radius: 3px;
+  padding: 20px;
+}

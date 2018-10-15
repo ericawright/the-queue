@@ -37,15 +37,19 @@ pub fn create_project(conn: &PgConnection, new_project: &NewProject) -> usize {
         .expect("Error saving new project")
 }
 
+pub fn change_project_status(conn: &PgConnection) {
+    let project_id = 1;
+    // let project = diesel::update(projects::find(project_id))
+    //     .set(name.eq("changed"))
+    //     .get_result::<Project>(conn)
+    //     .expect(&format!("Unable to find project {}", project_id));
+}
+
 fn main() {
     #[derive(Serialize,)]
     pub struct MyStruct {
         message: String,
     }
-    // #[derive(Serialize, Clone, Debug)]
-    // enum Project {
-    //     title(String),
-    // }
 
     println!("Now listening on 0.0.0.0:8000");
 
@@ -68,22 +72,20 @@ fn main() {
                 (GET) (/projects) => {
                     let results = fetch_all_projects(&connection);
                     println!("Displaying {} projects", results.len());
-                    // for project in results {
-                    //     println!("-----------\n");
-                    //     println!("{}", project.title);
-                    //     println!("{}", project.body);
-                    // }
-                    // let v3: Vec<_> = (0..7).map(|_| Sim::default()).collect();
-                      // let foos = results.collect::<Vec<models::Project>>();
                     println!("{:?}", results);
-                    
                     Response::json(&results)
+                },
+                
+                (POST) (/update_status) => {
+                    println!("update status was called &&&&&");
+                    // println!("{:?}", rouille::input::json_input(request));
+                    // change_project_status(&connection);
+                    Response::json(&MyStruct { message: "It might have worked".to_owned()})
                 },
 
                 (POST) (/projects) => {
                     println!("called projects first");
                     let data: NewProject = try_or_400!(rouille::input::json_input(request));
-                    
                     create_project(&connection, &data);
 
                     // return anything for now
