@@ -40,18 +40,6 @@ class App extends Component {
     this.setState({new_projects, in_progress_projects, done_projects});
   }
 
-  async updateStatus() {
-    console.log('update status was clicked');
-    const response = await fetch('/update_status', {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      },
-    });
-    console.log(response);
-  }
-
   render() {
     return (
       <div className="App">

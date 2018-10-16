@@ -17,7 +17,7 @@ use diesel::prelude::*;
 use diesel::pg::PgConnection;
 use std::env;
 use self::schema::projects;
-use self::models::{Project, NewProject};
+use self::models::{Project, NewProject, EditProject};
 
 pub fn establish_connection() -> PgConnection {
     let database_url = env::var("DATABASE_URL").expect("DATABASE_URL must be set");
@@ -37,12 +37,12 @@ pub fn create_project(conn: &PgConnection, new_project: &NewProject) -> usize {
         .expect("Error saving new project")
 }
 
-pub fn change_project_status(conn: &PgConnection) {
-    let project_id = 1;
-    // let project = diesel::update(projects::find(project_id))
-    //     .set(name.eq("changed"))
-    //     .get_result::<Project>(conn)
-    //     .expect(&format!("Unable to find project {}", project_id));
+pub fn change_project_status(conn: &PgConnection, id: &i32, body: &EditProject) {
+    let project = diesel::update(projects::table)
+        .set(body)
+        .filter(projects::id.eq(id))
+        .get_result::<Project>(conn)
+        .expect(&format!("Unable to find project {}", id));
 }
 
 fn main() {
@@ -75,11 +75,10 @@ fn main() {
                     println!("{:?}", results);
                     Response::json(&results)
                 },
-                
-                (POST) (/update_status) => {
-                    println!("update status was called &&&&&");
-                    // println!("{:?}", rouille::input::json_input(request));
-                    // change_project_status(&connection);
+
+                (POST) (/update_status/{id: i32}) => {
+                    let body: EditProject = try_or_400!(rouille::input::json_input(request));
+                    change_project_status(&connection, &id, &body);
                     Response::json(&MyStruct { message: "It might have worked".to_owned()})
                 },
 
