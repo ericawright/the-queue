@@ -13,7 +13,7 @@ class EditProjectForm extends Component {
       name: props.name,
       email: props.email,
       status: props.status,
-    }
+    };
 
     this.submitEditedProject = this.submitEditedProject.bind(this);
     this.handleChange = this.handleChange.bind(this);
@@ -21,7 +21,6 @@ class EditProjectForm extends Component {
 
   async submitEditedProject(e) {
     e.preventDefault();
-    console.log('form submission');
 
     let title = e.target.querySelector('#form-title').value;
     let email = e.target.querySelector('#form-email').value;
@@ -63,9 +62,9 @@ class EditProjectForm extends Component {
     console.log('response,', result);
     this.props.hideModal();
   }
-  
+
   handleChange(e) {
-    this.setState({ [e.target.name]: e.target.value });
+    this.setState({[e.target.name]: e.target.value});
   }
 
   render() {
@@ -73,13 +72,13 @@ class EditProjectForm extends Component {
       <div>
         <form onSubmit={this.submitEditedProject}>
           <h2>Edit Project {this.props.title}</h2>
-          <label htmlFor="form-title"><span>Title of project: * </span><input name="title" id="form-title" value={this.state.title} onChange={this.handleChange} /></label>
+          <label htmlFor="form-title"><span>Title of project: </span><input name="title" id="form-title" value={this.state.title} onChange={this.handleChange} /></label>
           <label htmlFor="form-name"><span>Requester name: </span><input name="name" id="form-name" value={this.state.name} onChange={this.handleChange} /></label>
-          <label htmlFor="form-email"><span>Email: * </span><input type="email" name="email" id="form-email" value={this.state.email} onChange={this.handleChange} /></label>
+          <label htmlFor="form-email"><span>Email: </span><input type="email" name="email" id="form-email" value={this.state.email} onChange={this.handleChange} /></label>
           <label htmlFor="form-content">Description: </label>
           <textarea name="content" id="form-content" value={this.state.content} onChange={this.handleChange} />
-          <label htmlFor="form-link"><span>Link: * </span><input type="url" name="link" id="form-link" value={this.state.link} onChange={this.handleChange} /></label>
-          <label htmlFor="form-status"><span>Status: * </span><input name="status" id="form-status" value={this.state.status} onChange={this.handleChange} /></label>
+          <label htmlFor="form-link"><span>Link: </span><input type="url" name="link" id="form-link" value={this.state.link} onChange={this.handleChange} /></label>
+          <label htmlFor="form-status"><span>Status: </span><input name="status" id="form-status" value={this.state.status} onChange={this.handleChange} /></label>
           <button className="submit-button">Submit Request</button>
         </form>
       </div>

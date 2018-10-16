@@ -1,7 +1,7 @@
 import '../styles/Modal.css';
 import React, {Component} from 'react';
-import NewProjectForm from './NewProjectForm';
 import EditProjectForm from './EditProjectForm';
+import NewProjectForm from './NewProjectForm';
 import PropTypes from 'prop-types';
 
 class Modal extends Component {
@@ -11,7 +11,6 @@ class Modal extends Component {
 
     this.showEditProjectForm = this.showEditProjectForm.bind(this);
     this.handleClick = this.handleClick.bind(this);
-    this.editProject = this.editProject.bind(this);
   }
 
   showEditProjectForm() {
@@ -24,12 +23,6 @@ class Modal extends Component {
     this.props.hideModal();
   }
 
-  editProject(e) {
-    e.preventDefault();
-    console.log('project edited');
-    // TODO
-  }
-
   render() {
     return (
       <div>
@@ -37,7 +30,7 @@ class Modal extends Component {
         <div id="modal-base">
           {(this.state.edit_project_form &&
             <div>
-              <EditProjectForm {...this.props}/>
+              <EditProjectForm {...this.props} />
             </div>) ||
           (this.props.title &&
             <div>

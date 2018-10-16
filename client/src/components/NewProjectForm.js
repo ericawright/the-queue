@@ -11,7 +11,6 @@ class NewProjectForm extends Component {
 
   async submitNewProject(e) {
     e.preventDefault();
-    console.log('form submission');
 
     let title = e.target.querySelector('#form-title').value;
     let email = e.target.querySelector('#form-email').value;
