@@ -17,7 +17,7 @@ use diesel::prelude::*;
 use diesel::pg::PgConnection;
 use std::env;
 use self::schema::projects;
-use self::models::{Project, NewProject, EditProject};
+use self::models::{Project, NewProjectForm, EditProjectForm};
 
 pub fn establish_connection() -> PgConnection {
     let database_url = env::var("DATABASE_URL").expect("DATABASE_URL must be set");
@@ -30,17 +30,16 @@ pub fn fetch_all_projects(conn: &PgConnection) -> std::vec::Vec<models::Project>
        .expect("Error loading projects")
 }
 
-pub fn create_project(conn: &PgConnection, new_project: &NewProject) -> usize {
+pub fn create_project(conn: &PgConnection, new_project: &NewProjectForm) -> usize {
     diesel::insert_into(projects::table)
         .values(new_project)
         .execute(conn)
         .expect("Error saving new project")
 }
 
-pub fn change_project_status(conn: &PgConnection, id: &i32, body: &EditProject) {
-    let project = diesel::update(projects::table)
+pub fn change_project_status(conn: &PgConnection, id: &i32, body: &EditProjectForm) {
+    let project = diesel::update(projects::table.find(id))
         .set(body)
-        .filter(projects::id.eq(id))
         .get_result::<Project>(conn)
         .expect(&format!("Unable to find project {}", id));
 }
@@ -77,14 +76,16 @@ fn main() {
                 },
 
                 (POST) (/update_status/{id: i32}) => {
-                    let body: EditProject = try_or_400!(rouille::input::json_input(request));
+                    println!("here or there");
+                    let body: EditProjectForm = try_or_400!(rouille::input::json_input(request));
+                        println!("and another thing");
                     change_project_status(&connection, &id, &body);
                     Response::json(&MyStruct { message: "It might have worked".to_owned()})
                 },
 
                 (POST) (/projects) => {
                     println!("called projects first");
-                    let data: NewProject = try_or_400!(rouille::input::json_input(request));
+                    let data: NewProjectForm = try_or_400!(rouille::input::json_input(request));
                     create_project(&connection, &data);
 
                     // return anything for now
