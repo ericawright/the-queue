@@ -38,7 +38,7 @@ pub fn create_project(conn: &PgConnection, new_project: &NewProjectForm) -> usiz
 }
 
 pub fn change_project_status(conn: &PgConnection, id: &i32, body: &EditProjectForm) {
-    let project = diesel::update(projects::table.find(id))
+    diesel::update(projects::table.find(id))
         .set(body)
         .get_result::<Project>(conn)
         .expect(&format!("Unable to find project {}", id));

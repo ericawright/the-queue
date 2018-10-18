@@ -1,7 +1,7 @@
 use super::schema::projects;
 use chrono::NaiveDateTime;
 
-#[derive(Queryable, Debug, Serialize, Insertable, Deserialize, AsChangeset)]
+#[derive(Queryable, Debug, Serialize)]
 pub struct Project {
     pub id: i32,
     pub title: String,

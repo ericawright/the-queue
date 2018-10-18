@@ -24,10 +24,11 @@ class Modal extends Component {
   }
 
   render() {
+    let modalClass = this.state.edit_project_form? 'edit' : '';
     return (
       <div>
         <div id="overlay" onClick={this.handleClick} />
-        <div id="modal-base">
+        <div id="modal-base" className={modalClass}>
           {(this.state.edit_project_form &&
             <div>
               <EditProjectForm {...this.props} />
