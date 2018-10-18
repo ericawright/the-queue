@@ -1,5 +1,5 @@
-@import url('../node_modules/photon-colors/photon-colors.css');
-@import url('./components/buttons.css');
+@import url('../../node_modules/photon-colors/photon-colors.css');
+@import url('./buttons.css');
 
 * {
   box-sizing: border-box;

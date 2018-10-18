@@ -19,10 +19,24 @@ pub struct Project {
 
 #[derive(Insertable, Deserialize)]
 #[table_name = "projects"]
-pub struct NewProject {
+pub struct NewProjectForm {
     pub title: String,
     pub content: Option<String>,
     pub name: Option<String>,
     pub link: String,
     pub email: String,
+}
+
+#[derive(Queryable, Debug, Serialize, Deserialize, Insertable, AsChangeset)]
+#[table_name = "projects"]
+pub struct EditProjectForm {
+    pub title: Option<String>,
+    pub content: Option<Option<String>>,
+    pub status: Option<String>,
+    pub position: Option<Option<i32>>,
+    pub name: Option<Option<String>>,
+    pub link: Option<String>,
+    pub email: Option<String>,
+    pub assigned_to: Option<Option<String>>,
+    pub date_finished: Option<Option<NaiveDateTime>>,
 }

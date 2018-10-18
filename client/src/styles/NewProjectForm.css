@@ -1,0 +1,28 @@
+#form-content {
+  width: 100%;
+  height: 100px;
+  resize: none;
+}
+
+#modal-base label {
+  display: flex;
+  margin: 10px 0;
+}
+
+#modal-base label span {
+  flex: 1;
+}
+
+#modal-base label input {
+  flex: 2;
+  margin-inline-start: 4px;
+}
+
+.submit-button {
+  float: right;
+}
+
+.form-note {
+  display: inline-block;
+  font-size: 12px;
+}
