@@ -1,0 +1,1 @@
+DROP TRIGGER IF EXISTS updated_at_on_projects ON projects;
