@@ -1,5 +1,6 @@
 @import url('../../node_modules/photon-colors/photon-colors.css');
 @import url('./buttons.css');
+@import url('./colors.css');
 
 * {
   box-sizing: border-box;
@@ -15,7 +16,7 @@ body {
 }
 
 body {
-  background-color: var(--grey-10-a60);
+  background-color: var(--grey-20);
 }
 
 h1,
