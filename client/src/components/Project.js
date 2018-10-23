@@ -24,24 +24,17 @@ class Project extends Component {
     return (
       <div>
         <div className="project-card" onClick={this.viewProjectDetails}>
-          <p>title: {this.props.title}</p>
-          <p>content: {this.props.content}</p>
+          <h2>{this.props.project.title}</h2>
+          <p className="project-card-content">{this.props.project.content}</p>
         </div>
         {this.state.show_modal &&
-          <Modal hideModal={this.hideProjectDetails} {...this.props} />
+          <Modal hideModal={this.hideProjectDetails} {...this.props.project} />
         }
       </div>
     );
   }
 }
 
-Project.propTypes = {
-  title: PropTypes.string,
-  content: PropTypes.string,
-  link: PropTypes.string,
-  name: PropTypes.string,
-  email: PropTypes.string,
-  status: PropTypes.string,
-};
+Project.propTypes = {project: PropTypes.object};
 
 export default Project;
