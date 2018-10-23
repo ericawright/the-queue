@@ -2,9 +2,9 @@
   height: 200px;
   width: 170px;
   margin: 10px auto;
-  border: var(--ink-70-a25) 1px solid;
+  border: var(--ink-70-a30) 1px solid;
   cursor: pointer;
-  box-shadow: -4px 2px 11px 1px var(--ink-70-a25);
+  box-shadow: -4px 2px 11px 1px var(--ink-70-a30);
   border-radius: 4px;
   background: white;
   padding: 10px;
@@ -15,7 +15,7 @@
   text-overflow: ellipsis;
   text-align: center;
   padding-bottom: 5px;
-  border-bottom: var(--ink-70-a25) 1px solid;
+  border-bottom: var(--ink-70-a30) 1px solid;
 }
 
 .project-card-content {
