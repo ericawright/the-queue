@@ -24,6 +24,7 @@ class Modal extends Component {
   }
 
   render() {
+    let existing_project = Object.keys(this.props.active_project).length;
     let modalClass = this.state.edit_project_form? 'edit' : '';
     return (
       <div>
@@ -31,19 +32,19 @@ class Modal extends Component {
         <div id="modal-base" className={modalClass}>
           {(this.state.edit_project_form &&
             <div>
-              <EditProjectForm {...this.props} />
+              <EditProjectForm {...this.props.active_project} submitEditedProject={this.props.submitEditedProject}/>
             </div>) ||
-          (this.props.title &&
+          (existing_project &&
             <div>
-              <h2>{this.props.title}</h2>
-              <p>Requester name: {this.props.name}</p>
-              <p>Email: {this.props.email}</p>
-              <p>Description: {this.props.content}</p>
-              <p>Link: {this.props.link}</p>
-              <p>Status: {this.props.status}</p>
+              <h2>{this.props.active_project.title}</h2>
+              <p>Requester name: {this.props.active_project.name}</p>
+              <p>Email: {this.props.active_project.email}</p>
+              <p>Description: {this.props.active_project.content}</p>
+              <p>Link: {this.props.active_project.link}</p>
+              <p>Status: {this.props.active_project.status}</p>
               <button onClick={this.showEditProjectForm}>Edit Project</button>
             </div>) ||
-            <NewProjectForm hideModal={this.props.hideModal} />
+            <NewProjectForm submitNewProject={this.props.submitProjectForm} />
           }
         </div>
       </div>
@@ -52,14 +53,10 @@ class Modal extends Component {
 }
 
 Modal.propTypes = {
-  id: PropTypes.number,
-  title: PropTypes.string,
-  content: PropTypes.string,
-  link: PropTypes.string,
-  name: PropTypes.string,
-  email: PropTypes.string,
-  status: PropTypes.string,
   hideModal: PropTypes.func,
+  submitProjectForm: PropTypes.func,
+  submitEditedProject: PropTypes.func,
+  active_project: PropTypes.object,
 };
 
 export default Modal;

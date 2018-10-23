@@ -6,35 +6,29 @@ import PropTypes from 'prop-types';
 class Project extends Component {
   constructor(props) {
     super(props);
-    this.state = {show_modal: false};
 
-    this.viewProjectDetails = this.viewProjectDetails.bind(this);
-    this.hideProjectDetails = this.hideProjectDetails.bind(this);
+    this.inspectProject = this.inspectProject.bind(this);
   }
 
-  viewProjectDetails() {
-    this.setState({show_modal: true});
-  }
-
-  hideProjectDetails() {
-    this.setState({show_modal: false});
+  inspectProject() {
+    this.props.inspectProject(this.props.project);
   }
 
   render() {
     return (
       <div>
-        <div className="project-card" onClick={this.viewProjectDetails}>
+        <div className="project-card" onClick={this.inspectProject}>
           <h2>{this.props.project.title}</h2>
           <p className="project-card-content">{this.props.project.content}</p>
         </div>
-        {this.state.show_modal &&
-          <Modal hideModal={this.hideProjectDetails} {...this.props.project} />
-        }
       </div>
     );
   }
 }
 
-Project.propTypes = {project: PropTypes.object};
+Project.propTypes = {
+  project: PropTypes.object,
+  inspectProject: PropTypes.func,
+};
 
 export default Project;

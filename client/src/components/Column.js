@@ -9,7 +9,8 @@ class Column extends Component {
       <div>
         <h2 className="column-title" id={this.props.title}>{this.props.title}</h2>
         <div>
-          {this.props.projects.map((element, i) => <Project key={element+i} project={element} />)}
+          {this.props.projects.map((element, i) => <Project key={i} project={element} submitEditedProject={this.props.submitEditedProject} inspectProject={this.props.inspectProject}
+          />)}
         </div>
       </div>
     );
@@ -19,6 +20,8 @@ class Column extends Component {
 Column.propTypes = {
   projects: PropTypes.array,
   title: PropTypes.string,
+  submitEditedProject: PropTypes.func,
+  inspectProject: PropTypes.func,
 };
 
 export default Column;
