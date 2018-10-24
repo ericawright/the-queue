@@ -7,7 +7,6 @@ import PropTypes from 'prop-types';
 class Modal extends Component {
   constructor(props) {
     super(props);
-    this.state = {edit_project_form: false};
 
     this.showEditProjectForm = this.showEditProjectForm.bind(this);
     this.handleClick = this.handleClick.bind(this);
@@ -15,7 +14,7 @@ class Modal extends Component {
 
   showEditProjectForm() {
     // TODO add a password or otherwise validate here
-    this.setState({edit_project_form: true});
+    this.props.showModal('edit');
   }
 
   handleClick(e) {
@@ -24,17 +23,16 @@ class Modal extends Component {
   }
 
   render() {
-    let existing_project = Object.keys(this.props.active_project).length;
-    let modalClass = this.state.edit_project_form? 'edit' : '';
+    let modalClass = this.props.type;
     return (
       <div>
         <div id="overlay" onClick={this.handleClick} />
         <div id="modal-base" className={modalClass}>
-          {(this.state.edit_project_form &&
+          {(this.props.type === 'edit' &&
             <div>
-              <EditProjectForm {...this.props.active_project} submitEditedProject={this.props.submitEditedProject}/>
+              <EditProjectForm {...this.props.active_project} submitEditedProject={this.props.submitEditedProject} />
             </div>) ||
-          (existing_project &&
+          (this.props.type === 'details' &&
             <div>
               <h2>{this.props.active_project.title}</h2>
               <p>Requester name: {this.props.active_project.name}</p>
@@ -44,7 +42,8 @@ class Modal extends Component {
               <p>Status: {this.props.active_project.status}</p>
               <button onClick={this.showEditProjectForm}>Edit Project</button>
             </div>) ||
-            <NewProjectForm submitNewProject={this.props.submitProjectForm} />
+          (this.props.type === 'new' &&
+            <NewProjectForm submitNewProject={this.props.submitNewProject} />)
           }
         </div>
       </div>
@@ -54,9 +53,11 @@ class Modal extends Component {
 
 Modal.propTypes = {
   hideModal: PropTypes.func,
-  submitProjectForm: PropTypes.func,
+  showModal: PropTypes.func,
+  submitNewProject: PropTypes.func,
   submitEditedProject: PropTypes.func,
   active_project: PropTypes.object,
+  type: PropTypes.string,
 };
 
 export default Modal;

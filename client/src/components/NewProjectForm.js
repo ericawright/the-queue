@@ -5,19 +5,50 @@ import PropTypes from 'prop-types';
 class NewProjectForm extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      title: '',
+      content: '',
+      link: '',
+      name: '',
+      email: '',
+    };
+
+    this.handleChange = this.handleChange.bind(this);
+    this.submitNewProject = this.submitNewProject.bind(this);
+  }
+
+  handleChange(e) {
+    this.setState({[e.target.name]: e.target.value});
+  }
+
+  submitNewProject(e) {
+    e.preventDefault();
+    this.props.submitNewProject(this.state);
   }
 
   render() {
     return (
       <div>
-        <form onSubmit={this.props.submitNewProject}>
+        <form onSubmit={this.submitNewProject}>
           <h2>Submit a New Project</h2>
-          <label htmlFor="form-name"><span>Requester name: </span><input name="form-name" id="form-name" /></label>
-          <label htmlFor="form-email"><span>Email: * </span><input type="email" name="form-email" id="form-email" placeholder="firefox@mozilla.com" /></label>
-          <label htmlFor="form-title"><span>Title of project: * </span><input name="form-title" id="form-title" /></label>
+          <label htmlFor="form-name">
+            <span>Requester name: </span>
+            <input name="name" id="form-name" value={this.state.name} onChange={this.handleChange} />
+          </label>
+          <label htmlFor="form-email">
+            <span>Email: * </span>
+            <input type="email" name="email" id="form-email" placeholder="firefox@mozilla.com" value={this.state.email} onChange={this.handleChange} />
+          </label>
+          <label htmlFor="form-title">
+            <span>Title of project: * </span>
+            <input name="title" id="form-title" value={this.state.title} onChange={this.handleChange} />
+          </label>
           <label htmlFor="form-content">Tell us about the project:</label>
-          <textarea name="form-content" id="form-content" />
-          <label htmlFor="form-link"><span>Link to more information: * </span><input type="url" name="form-link" id="form-link" /></label>
+          <textarea name="content" id="form-content" value={this.state.content} onChange={this.handleChange} />
+          <label htmlFor="form-link">
+            <span>Link to more information: * </span>
+            <input type="url" name="link" id="form-link" value={this.state.link} onChange={this.handleChange} />
+          </label>
           <p className="form-note">Note: fields with a * are required.</p>
           <button className="submit-button">Submit Request</button>
         </form>
@@ -26,8 +57,6 @@ class NewProjectForm extends Component {
   }
 }
 
-NewProjectForm.propTypes = {
-  submitNewProject: PropTypes.func,
-};
+NewProjectForm.propTypes = {submitNewProject: PropTypes.func};
 
 export default NewProjectForm;

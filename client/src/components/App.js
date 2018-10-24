@@ -9,8 +9,7 @@ class App extends Component {
     super(props);
     this.state = {
       projects: [],
-      show_modal: false,
-      active_project: {},
+      modal: {type: '', active_project: {}},
     };
     this.showProjects = this.showProjects.bind(this);
     this.showForm = this.showForm.bind(this);
@@ -18,25 +17,23 @@ class App extends Component {
     this.submitNewProject = this.submitNewProject.bind(this);
     this.submitEditedProject = this.submitEditedProject.bind(this);
     this.inspectProject = this.inspectProject.bind(this);
+    this.parseProjectForm = this.parseProjectForm.bind(this);
   }
 
   UNSAFE_componentWillMount() {
     this.showProjects();
   }
-  
+
   inspectProject(active_project) {
-    console.log("setting active project", active_project)
-    this.setState({active_project, show_modal: true});
+    this.setState({modal: {type: 'details', active_project}});
   }
-  
-  //todo close 
 
   showForm() {
-    this.setState({show_modal: true});
+    this.setState({modal: {type: 'new', active_project: {}}});
   }
 
   hideForm() {
-    this.setState({show_modal: false, active_project: {}});
+    this.setState({modal: {type: '', active_project: {}}});
   }
 
   async showProjects() {
@@ -45,32 +42,23 @@ class App extends Component {
 
     this.setState({projects});
   }
-  
-  async submitNewProject(e) {
-    console.log("new submit")
-    e.preventDefault();
 
-    let title = e.target.querySelector('#form-title').value;
-    let email = e.target.querySelector('#form-email').value;
-    let link = e.target.querySelector('#form-link').value;
-    if (!title || !link || !email) {
+  parseProjectForm(form_data) {
+    for (let key in form_data) {
+      if (form_data[key] === '') {
+        // Actually delete so that we don't send empty strings or undefined to the database.
+        delete form_data[key];
+      }
+    }
+    if (!form_data.title || !form_data.link || !form_data.email) {
       // TODO: show error here
       return;
     }
-    let data = {
-      title,
-      link,
-      email,
-    };
-    let content = e.target.querySelector('#form-content').value;
-    let name = e.target.querySelector('#form-name').value;
-    if (content) {
-      data.content = content;
-    }
-    if (name) {
-      data.name = name;
-    }
+    return form_data;
+  }
 
+  async submitNewProject(form_data) {
+    let data = this.parseProjectForm(form_data);
     const response = await fetch('/projects', {
       method: 'POST',
       headers: {
@@ -82,40 +70,13 @@ class App extends Component {
 
     const result = await response.json();
     // TODO handle error here
-    this.showProjects();
+    this.showProjects(); // TODO change server to send back project in json, then use the result
     console.log('response,', result);
     this.hideForm();
   }
-  // TODO can these be combined?
-  async submitEditedProject(e, id) {
-    console.log("edited submit")
-    e.preventDefault();
 
-    let title = e.target.querySelector('#form-title').value;
-    let email = e.target.querySelector('#form-email').value;
-    let link = e.target.querySelector('#form-link').value;
-    if (!title || !link || !email) {
-      // TODO: show error here
-      return;
-    }
-    let data = {
-      title,
-      link,
-      email,
-    };
-    let content = e.target.querySelector('#form-content').value;
-    let name = e.target.querySelector('#form-name').value;
-    let status = e.target.querySelector('#form-status').value;
-    if (content) {
-      data.content = content;
-    }
-    if (name) {
-      data.name = name;
-    }
-    if (status) {
-      data.status = status;
-    }
-
+  async submitEditedProject(id, form_data) {
+    let data = this.parseProjectForm(form_data);
     const response = await fetch(`/update_status/${id}`, {
       method: 'POST',
       headers: {
@@ -127,7 +88,7 @@ class App extends Component {
 
     const result = await response.json();
     // TODO handle error here
-    this.showProjects();
+    this.showProjects(); // TODO change server to send back project in json, then use the result
     console.log('response,', result);
     this.hideForm();
   }
@@ -158,8 +119,8 @@ class App extends Component {
         <div className="grid-wrapper">
           {columns}
         </div>
-        {this.state.show_modal &&
-          <Modal active_project={this.state.active_project} submitNewProject={this.submitNewProject} submitEditedProject={this.submitEditedProject} hideModal={this.hideForm} active_project={this.state.active_project} />
+        {this.state.modal.type &&
+          <Modal submitNewProject={this.submitNewProject} submitEditedProject={this.submitEditedProject} hideModal={this.hideForm} showModal={this.showForm} {...this.state.modal} />
         }
       </div>
     );

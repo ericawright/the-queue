@@ -22,9 +22,10 @@ class EditProjectForm extends Component {
   handleChange(e) {
     this.setState({[e.target.name]: e.target.value});
   }
-  
+
   submitProjectForm(e) {
-    this.props.submitEditedProject(e, this.props.id);
+    e.preventDefault();
+    this.props.submitEditedProject(this.props.id, this.state);
   }
 
   render() {
