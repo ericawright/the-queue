@@ -12,11 +12,9 @@ class App extends Component {
       modal: {type: '', active_project: {}},
     };
     this.showProjects = this.showProjects.bind(this);
-    this.showForm = this.showForm.bind(this);
-    this.hideForm = this.hideForm.bind(this);
-    this.submitNewProject = this.submitNewProject.bind(this);
-    this.submitEditedProject = this.submitEditedProject.bind(this);
-    this.inspectProject = this.inspectProject.bind(this);
+    this.showModal = this.showModal.bind(this);
+    this.hideModal = this.hideModal.bind(this);
+    this.submitProject = this.submitProject.bind(this);
     this.parseProjectForm = this.parseProjectForm.bind(this);
   }
 
@@ -24,15 +22,11 @@ class App extends Component {
     this.showProjects();
   }
 
-  inspectProject(active_project) {
-    this.setState({modal: {type: 'details', active_project}});
+  showModal(type, active_project) {
+    this.setState({modal: {type, active_project}});
   }
 
-  showForm() {
-    this.setState({modal: {type: 'new', active_project: {}}});
-  }
-
-  hideForm() {
+  hideModal() {
     this.setState({modal: {type: '', active_project: {}}});
   }
 
@@ -50,16 +44,17 @@ class App extends Component {
         delete form_data[key];
       }
     }
-    if (!form_data.title || !form_data.link || !form_data.email) {
-      // TODO: show error here
-      return;
-    }
     return form_data;
   }
 
-  async submitNewProject(form_data) {
+  async submitProject(form_data, address) {
     let data = this.parseProjectForm(form_data);
-    const response = await fetch('/projects', {
+    if (!data.title || !data.link || !data.email) {
+      // TODO: show error here
+      return;
+    }
+
+    const response = await fetch(address, {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
@@ -72,25 +67,7 @@ class App extends Component {
     // TODO handle error here
     this.showProjects(); // TODO change server to send back project in json, then use the result
     console.log('response,', result);
-    this.hideForm();
-  }
-
-  async submitEditedProject(id, form_data) {
-    let data = this.parseProjectForm(form_data);
-    const response = await fetch(`/update_status/${id}`, {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-    });
-
-    const result = await response.json();
-    // TODO handle error here
-    this.showProjects(); // TODO change server to send back project in json, then use the result
-    console.log('response,', result);
-    this.hideForm();
+    this.hideModal();
   }
 
   render() {
@@ -107,7 +84,7 @@ class App extends Component {
 
     let columns = [];
     project_collections.forEach((projects, title) => {
-      columns.push(<Column inspectProject={this.inspectProject} submitEditedProject={this.submitEditedProject} projects={projects} title={title} />);
+      columns.push(<Column showModal={this.showModal} submitProject={this.submitProject} projects={projects} title={title} />);
     });
 
     document.documentElement.style.setProperty('--colCount', columns.length);
@@ -115,12 +92,12 @@ class App extends Component {
     return (
       <div className="App">
         <Header />
-        <button id="suggest-button" onClick={this.showForm}>Suggest a new project</button>
+        <button id="suggest-button" onClick={this.showModal.bind(null, 'new', {})}>Suggest a new project</button>
         <div className="grid-wrapper">
           {columns}
         </div>
         {this.state.modal.type &&
-          <Modal submitNewProject={this.submitNewProject} submitEditedProject={this.submitEditedProject} hideModal={this.hideForm} showModal={this.showForm} {...this.state.modal} />
+          <Modal submitProject={this.submitProject} hideModal={this.hideModal} showModal={this.showModal} {...this.state.modal} />
         }
       </div>
     );

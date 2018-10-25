@@ -25,7 +25,7 @@ class EditProjectForm extends Component {
 
   submitProjectForm(e) {
     e.preventDefault();
-    this.props.submitEditedProject(this.props.id, this.state);
+    this.props.submitProject(this.state, `/update_status/${this.props.id}`);
   }
 
   render() {
@@ -33,13 +33,28 @@ class EditProjectForm extends Component {
       <div>
         <form onSubmit={this.submitProjectForm}>
           <h2>Edit Project {this.props.title}</h2>
-          <label htmlFor="form-title"><span>Title of project: </span><input name="title" id="form-title" value={this.state.title} onChange={this.handleChange} /></label>
-          <label htmlFor="form-name"><span>Requester name: </span><input name="name" id="form-name" value={this.state.name} onChange={this.handleChange} /></label>
-          <label htmlFor="form-email"><span>Email: </span><input type="email" name="email" id="form-email" value={this.state.email} onChange={this.handleChange} /></label>
+          <label htmlFor="form-title">
+            <span>Title of project: </span>
+            <input name="title" id="form-title" value={this.state.title} onChange={this.handleChange} />
+          </label>
+          <label htmlFor="form-name">
+            <span>Requester name: </span>
+            <input name="name" id="form-name" value={this.state.name} onChange={this.handleChange} />
+          </label>
+          <label htmlFor="form-email">
+            <span>Email: </span>
+            <input type="email" name="email" id="form-email" value={this.state.email} onChange={this.handleChange} />
+          </label>
           <label htmlFor="form-content">Description: </label>
           <textarea name="content" id="form-content" value={this.state.content} onChange={this.handleChange} />
-          <label htmlFor="form-link"><span>Link: </span><input type="url" name="link" id="form-link" value={this.state.link} onChange={this.handleChange} /></label>
-          <label htmlFor="form-status"><span>Status: </span><input name="status" id="form-status" value={this.state.status} onChange={this.handleChange} /></label>
+          <label htmlFor="form-link">
+            <span>Link: </span>
+            <input type="url" name="link" id="form-link" value={this.state.link} onChange={this.handleChange} />
+          </label>
+          <label htmlFor="form-status">
+            <span>Status: </span>
+            <input name="status" id="form-status" value={this.state.status} onChange={this.handleChange} />
+          </label>
           <button className="submit-button">Submit Request</button>
         </form>
       </div>
@@ -55,7 +70,7 @@ EditProjectForm.propTypes = {
   name: PropTypes.string,
   email: PropTypes.string,
   status: PropTypes.string,
-  submitEditedProject: PropTypes.func,
+  submitProject: PropTypes.func,
 };
 
 export default EditProjectForm;

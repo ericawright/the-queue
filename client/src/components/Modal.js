@@ -14,7 +14,7 @@ class Modal extends Component {
 
   showEditProjectForm() {
     // TODO add a password or otherwise validate here
-    this.props.showModal('edit');
+    this.props.showModal('edit', this.props.active_project);
   }
 
   handleClick(e) {
@@ -30,7 +30,7 @@ class Modal extends Component {
         <div id="modal-base" className={modalClass}>
           {(this.props.type === 'edit' &&
             <div>
-              <EditProjectForm {...this.props.active_project} submitEditedProject={this.props.submitEditedProject} />
+              <EditProjectForm {...this.props.active_project} submitProject={this.props.submitProject} />
             </div>) ||
           (this.props.type === 'details' &&
             <div>
@@ -43,7 +43,7 @@ class Modal extends Component {
               <button onClick={this.showEditProjectForm}>Edit Project</button>
             </div>) ||
           (this.props.type === 'new' &&
-            <NewProjectForm submitNewProject={this.props.submitNewProject} />)
+            <NewProjectForm submitProject={this.props.submitProject} />)
           }
         </div>
       </div>
@@ -54,8 +54,7 @@ class Modal extends Component {
 Modal.propTypes = {
   hideModal: PropTypes.func,
   showModal: PropTypes.func,
-  submitNewProject: PropTypes.func,
-  submitEditedProject: PropTypes.func,
+  submitProject: PropTypes.func,
   active_project: PropTypes.object,
   type: PropTypes.string,
 };

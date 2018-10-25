@@ -10,7 +10,7 @@ class Project extends Component {
   }
 
   inspectProject() {
-    this.props.inspectProject(this.props.project);
+    this.props.showModal('details', this.props.project);
   }
 
   render() {
@@ -27,7 +27,7 @@ class Project extends Component {
 
 Project.propTypes = {
   project: PropTypes.object,
-  inspectProject: PropTypes.func,
+  showModal: PropTypes.func,
 };
 
 export default Project;

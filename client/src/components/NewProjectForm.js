@@ -23,7 +23,7 @@ class NewProjectForm extends Component {
 
   submitNewProject(e) {
     e.preventDefault();
-    this.props.submitNewProject(this.state);
+    this.props.submitProject(this.state, '/projects');
   }
 
   render() {
@@ -57,6 +57,6 @@ class NewProjectForm extends Component {
   }
 }
 
-NewProjectForm.propTypes = {submitNewProject: PropTypes.func};
+NewProjectForm.propTypes = {submitProject: PropTypes.func};
 
 export default NewProjectForm;
