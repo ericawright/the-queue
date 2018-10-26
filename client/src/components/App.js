@@ -9,23 +9,25 @@ class App extends Component {
     super(props);
     this.state = {
       projects: [],
-      show_form: false,
+      modal: {type: '', active_project: {}},
     };
     this.showProjects = this.showProjects.bind(this);
-    this.showForm = this.showForm.bind(this);
-    this.hideForm = this.hideForm.bind(this);
+    this.showModal = this.showModal.bind(this);
+    this.hideModal = this.hideModal.bind(this);
+    this.submitProject = this.submitProject.bind(this);
+    this.parseProjectForm = this.parseProjectForm.bind(this);
   }
 
   UNSAFE_componentWillMount() {
     this.showProjects();
   }
 
-  showForm() {
-    this.setState({show_form: true});
+  showModal(type, active_project) {
+    this.setState({modal: {type, active_project}});
   }
 
-  hideForm() {
-    this.setState({show_form: false});
+  hideModal() {
+    this.setState({modal: {type: '', active_project: {}}});
   }
 
   async showProjects() {
@@ -33,6 +35,39 @@ class App extends Component {
     let projects = await response.json();
 
     this.setState({projects});
+  }
+
+  parseProjectForm(form_data) {
+    for (let key in form_data) {
+      if (form_data[key] === '') {
+        // Actually delete so that we don't send empty strings or undefined to the database.
+        delete form_data[key];
+      }
+    }
+    return form_data;
+  }
+
+  async submitProject(form_data, address) {
+    let data = this.parseProjectForm(form_data);
+    if (!data.title || !data.link || !data.email) {
+      // TODO: show error here
+      return;
+    }
+
+    const response = await fetch(address, {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    });
+
+    const result = await response.json();
+    // TODO handle error here
+    this.showProjects(); // TODO change server to send back project in json, then use the result
+    console.log('response,', result);
+    this.hideModal();
   }
 
   render() {
@@ -49,7 +84,7 @@ class App extends Component {
 
     let columns = [];
     project_collections.forEach((projects, title) => {
-      columns.push(<Column projects={projects} title={title} />);
+      columns.push(<Column showModal={this.showModal} submitProject={this.submitProject} projects={projects} title={title} />);
     });
 
     document.documentElement.style.setProperty('--colCount', columns.length);
@@ -57,12 +92,12 @@ class App extends Component {
     return (
       <div className="App">
         <Header />
-        <button id="suggest-button" onClick={this.showForm}>Suggest a new project</button>
+        <button id="suggest-button" onClick={this.showModal.bind(null, 'new', {})}>Suggest a new project</button>
         <div className="grid-wrapper">
           {columns}
         </div>
-        {this.state.show_form &&
-          <Modal hideModal={this.hideForm} />
+        {this.state.modal.type &&
+          <Modal submitProject={this.submitProject} hideModal={this.hideModal} showModal={this.showModal} {...this.state.modal} />
         }
       </div>
     );
