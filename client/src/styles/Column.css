@@ -1,5 +1,13 @@
+.column {
+  padding: 15px;
+}
+
 .column-title {
   text-align: center;
   text-transform: capitalize;
   margin-bottom: 20px;
+}
+
+.drop-target {
+  outline: 1px dashed var(--ink-70-a30);
 }

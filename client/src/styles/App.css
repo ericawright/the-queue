@@ -13,7 +13,7 @@
 
 .grid-wrapper {
   display: grid;
-  column-gap: 120px;
+  column-gap: 100px;
   row-gap: 40px;
   grid-template-columns: repeat(var(--colCount), auto);
   grid-template-rows: repeat(var(--rowCount), auto);

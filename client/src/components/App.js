@@ -10,12 +10,19 @@ class App extends Component {
     this.state = {
       projects: [],
       modal: {type: '', active_project: {}},
+      drop_target: null,
+      dragged_project_id: null,
     };
     this.showProjects = this.showProjects.bind(this);
     this.showModal = this.showModal.bind(this);
     this.hideModal = this.hideModal.bind(this);
     this.submitProject = this.submitProject.bind(this);
     this.parseProjectForm = this.parseProjectForm.bind(this);
+    this.setDropTarget = this.setDropTarget.bind(this);
+    this.removeDropTarget = this.removeDropTarget.bind(this);
+    this.handleDrop = this.handleDrop.bind(this);
+    this.setDragged = this.setDragged.bind(this);
+    this.removeDragged = this.removeDragged.bind(this);
   }
 
   UNSAFE_componentWillMount() {
@@ -70,6 +77,43 @@ class App extends Component {
     this.hideModal();
   }
 
+  setDropTarget(drop_target) {
+    this.setState({drop_target});
+  }
+
+  removeDropTarget(e) {
+    if (e) {
+      e.preventDefault();
+    }
+    this.setState({drop_target: null});
+  }
+
+  async handleDrop(e) {
+    e.preventDefault();
+    const data = {status: this.state.drop_target};
+
+    const response = fetch(`/update_status/${this.state.dragged_project_id}`, {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    });
+    await response;
+    // TODO change server to send back project/change in json, then use the result
+    this.showProjects();
+    this.removeDropTarget();
+  }
+
+  setDragged(dragged_project_id) {
+    this.setState({dragged_project_id});
+  }
+
+  removeDragged() {
+    this.setState({dragged_project_id: null});
+  }
+
   render() {
     let project_collections = new Map();
     this.state.projects.forEach(project => {
@@ -84,7 +128,7 @@ class App extends Component {
 
     let columns = [];
     project_collections.forEach((projects, title) => {
-      columns.push(<Column showModal={this.showModal} submitProject={this.submitProject} projects={projects} title={title} />);
+      columns.push(<Column setDropTarget={this.setDropTarget} removeDropTarget={this.removeDropTarget} is_drop_target={this.state.drop_target === title} handleDrop={this.handleDrop} setDragged={this.setDragged} showModal={this.showModal} submitProject={this.submitProject} projects={projects} title={title} />);
     });
 
     document.documentElement.style.setProperty('--colCount', columns.length);
