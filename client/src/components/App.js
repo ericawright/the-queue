@@ -33,7 +33,10 @@ class App extends Component {
     this.setState({modal: {type, active_project}});
   }
 
-  hideModal() {
+  hideModal(e) {
+    if (e) {
+      e.stopPropagation();
+    }
     this.setState({modal: {type: '', active_project: {}}});
   }
 
@@ -54,7 +57,8 @@ class App extends Component {
     return form_data;
   }
 
-  async submitProject(form_data, address) {
+  async submitProject(e, form_data, address) {
+    e.preventDefault();
     let data = this.parseProjectForm(form_data);
     if (!data.title || !data.link || !data.email) {
       // TODO: show error here
@@ -77,7 +81,8 @@ class App extends Component {
     this.hideModal();
   }
 
-  setDropTarget(drop_target) {
+  setDropTarget(e, drop_target) {
+    e.preventDefault();
     this.setState({drop_target});
   }
 

@@ -15,7 +15,6 @@ class EditProjectForm extends Component {
       status: props.status,
     };
 
-    this.submitProjectForm = this.submitProjectForm.bind(this);
     this.handleChange = this.handleChange.bind(this);
   }
 
@@ -23,15 +22,10 @@ class EditProjectForm extends Component {
     this.setState({[e.target.name]: e.target.value});
   }
 
-  submitProjectForm(e) {
-    e.preventDefault();
-    this.props.submitProject(this.state, `/update_status/${this.props.id}`);
-  }
-
   render() {
     return (
       <div>
-        <form onSubmit={this.submitProjectForm}>
+        <form onSubmit={e => this.props.submitProject(e, this.state, `/update_status/${this.props.id}`)}>
           <h2>Edit Project {this.props.title}</h2>
           <label htmlFor="form-title">
             <span>Title of project: </span>

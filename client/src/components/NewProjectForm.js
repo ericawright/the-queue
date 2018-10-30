@@ -14,22 +14,16 @@ class NewProjectForm extends Component {
     };
 
     this.handleChange = this.handleChange.bind(this);
-    this.submitNewProject = this.submitNewProject.bind(this);
   }
 
   handleChange(e) {
     this.setState({[e.target.name]: e.target.value});
   }
 
-  submitNewProject(e) {
-    e.preventDefault();
-    this.props.submitProject(this.state, '/projects');
-  }
-
   render() {
     return (
       <div>
-        <form onSubmit={this.submitNewProject}>
+        <form onSubmit={e => this.props.submitProject(e, this.state, '/projects')}>
           <h2>Submit a New Project</h2>
           <label htmlFor="form-name">
             <span>Requester name: </span>
