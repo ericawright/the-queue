@@ -5,28 +5,11 @@ import NewProjectForm from './NewProjectForm';
 import PropTypes from 'prop-types';
 
 class Modal extends Component {
-  constructor(props) {
-    super(props);
-
-    this.showEditProjectForm = this.showEditProjectForm.bind(this);
-    this.handleClick = this.handleClick.bind(this);
-  }
-
-  showEditProjectForm() {
-    // TODO add a password or otherwise validate here
-    this.props.showModal('edit', this.props.active_project);
-  }
-
-  handleClick(e) {
-    e.stopPropagation();
-    this.props.hideModal();
-  }
-
   render() {
     let modalClass = this.props.type;
     return (
       <div>
-        <div id="overlay" onClick={this.handleClick} />
+        <div id="overlay" onClick={e => this.props.hideModal(e)} />
         <div id="modal-base" className={modalClass}>
           {(this.props.type === 'edit' &&
             <div>
@@ -40,7 +23,7 @@ class Modal extends Component {
               <p>Description: {this.props.active_project.content}</p>
               <p>Link: {this.props.active_project.link}</p>
               <p>Status: {this.props.active_project.status}</p>
-              <button onClick={this.showEditProjectForm}>Edit Project</button>
+              <button onClick={() => this.props.showModal('edit', this.props.active_project)}>Edit Project</button>
             </div>) ||
           (this.props.type === 'new' &&
             <NewProjectForm submitProject={this.props.submitProject} />)
